@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean name="initEngine" class="com.lemon.init.InitEngine">
+        <property name="initializers">
+            <list>
+                <entity type="ref" value="preMethodInitializer"></entity>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="preMethodInitializer" class="com.lemon.init.PreMethodInitializer" />
+    <bean name="netEngine" class="com.lemon.net.NetEngine">
+        <property name="mContext" value-ref="mContext" />
+        <property name="paramConverterMap">
+            <map>
+                <entry key="baseParamConverter" value-ref="baseParamConverter"></entry>
+            </map>
+        </property>
+        <property name="resultConverterMap">
+            <map>
+                <entry key="baseResultParamConverter" value-ref="baseResultParamConverter"></entry>
+            </map>
+        </property>
+    </bean>
+    <bean name="baseParamConverter" class="com.lemon.converter.BaseParamConverter"></bean>
+    <bean name="baseResultParamConverter" class="com.lemon.converter.BaseResultConverter"></bean>
+
+    <bean name="config" class="com.lemon.config.Config" init-method="parser">
+        <property name="mContext" value-ref="mContext" />
+        <property name="version" value="1" />
+        <property name="configPath" value="config/config.json" />
+    </bean>
+
+    <bean name="packageUtil" class="com.lemon.util.PackageUtil">
+        <property name="mContext" value-ref="mContext"></property>
+    </bean>
+
+    <bean name="lemonDatabaseHelper" class="com.lemon.LemonDatabaseHelper" init-method="createTables">
+        <constructor>
+            <arg index="0" ref="true" type="android.content.Context" value="mContext"></arg>
+        </constructor>
+        <property name="mContext" value-ref="mContext"></property>
+        <property name="tables">
+            <list>
+                <entity type="basic" value="com.lemon.example.model.CarModel"></entity>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="demo2Model" class="com.lemon.example.model.Demo2Model">
+        <property name="mContext" value-ref="mContext"></property>
+        <property name="lemonMessage" value-ref="lemonMessage"></property>
+        <property name="value" value="value-xml" />
+    </bean>
+
+</beans>
