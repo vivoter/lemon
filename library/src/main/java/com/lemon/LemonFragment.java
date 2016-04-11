@@ -47,11 +47,11 @@ public abstract class LemonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragment = this;
         this.inflater = inflater;
-        reflectLayout();
+        injectLayout();
         setLayout();
         rootView = inflater.inflate(layout, container, false);
-        reflectView();
-        reflectEvent();
+        injectView();
+        injectEvent();
         parentInit();
         initView();
         initData();
@@ -82,7 +82,7 @@ public abstract class LemonFragment extends Fragment {
     }
 
 
-    private final void reflectLayout() {
+    private final void injectLayout() {
         //反射初始化布局
         Layout mLayout = getClass().getAnnotation(Layout.class);
         if (ParamUtils.isNull(mLayout)) {
@@ -92,7 +92,7 @@ public abstract class LemonFragment extends Fragment {
         layout = mLayout.id();
     }
 
-    private final void reflectView() {
+    private final void injectView() {
         //反射初始化视图
 
         Field[] fields = getClass().getDeclaredFields();
@@ -106,6 +106,7 @@ public abstract class LemonFragment extends Fragment {
             }
 
             try {
+                field.setAccessible(true);
                 field.set(this, rootView.findViewById(view.id()));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -113,7 +114,7 @@ public abstract class LemonFragment extends Fragment {
         }
     }
 
-    private final void reflectEvent() {
+    private final void injectEvent() {
         //反射初始化事件
         Method[] methods = getClass().getDeclaredMethods();
         if(ParamUtils.isEmpty(methods)){

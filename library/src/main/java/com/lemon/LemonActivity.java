@@ -50,11 +50,11 @@ public abstract class LemonActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reflectLayout();
+        injectLayout();
         setLayout();
         setContentView(layout);
-        reflectView();
-        reflectEvent();
+        injectView();
+        injectEvent();
         parentInit();
         initView();
         initData();
@@ -80,7 +80,7 @@ public abstract class LemonActivity extends Activity {
         lemonMessage = LemonContext.getBean(LemonMessage.class);
     }
 
-    private final void reflectLayout() {
+    private final void injectLayout() {
         //反射初始化布局
         Layout mLayout = getClass().getAnnotation(Layout.class);
         if (ParamUtils.isNull(mLayout)) {
@@ -90,7 +90,7 @@ public abstract class LemonActivity extends Activity {
         layout = mLayout.id();
     }
 
-    private final void reflectView() {
+    private final void injectView() {
         //反射初始化视图
 
         Field[] fields = getClass().getDeclaredFields();
@@ -104,6 +104,7 @@ public abstract class LemonActivity extends Activity {
             }
 
             try {
+                field.setAccessible(true);
                 field.set(this, findViewById(view.id()));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -111,7 +112,7 @@ public abstract class LemonActivity extends Activity {
         }
     }
 
-    private final void reflectEvent() {
+    private final void injectEvent() {
         //反射初始化事件
         Method[] methods = getClass().getDeclaredMethods();
         if(ParamUtils.isEmpty(methods)){

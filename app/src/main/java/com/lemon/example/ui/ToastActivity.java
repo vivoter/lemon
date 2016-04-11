@@ -26,7 +26,7 @@ import com.lemon.example.R;
 public class ToastActivity extends LemonActivity {
 
     @FieldView(id=R.id.tvValue)
-    public TextView tvValue;
+    private TextView tvValue;
 
     @Override
     protected void initView() {
