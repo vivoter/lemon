@@ -4,6 +4,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.lemon.LemonActivity;
+import com.lemon.LemonContext;
 import com.lemon.LemonDaoManager;
 import com.lemon.annotation.FieldView;
 import com.lemon.annotation.Layout;

@@ -30,14 +30,14 @@ import dalvik.system.PathClassLoader;
 public class LemonGenerate {
 
     public Context mContext;
-    static String path = "app/src/main/assets/config/classes.cls";
+    static String path = "app/src/main/assets/config/lemon.cls";
 
     public static void main(String[] args) throws Exception {
         String packageName = "com.lemon";
-        generatorPackageClass(packageName);
+        generatorPackageClass(packageName,path,false);
     }
 
-    public static void generatorPackageClass(String packageName){
+    public static void generatorPackageClass(String packageName,String path,boolean append){
         try {
             List<String> classNames = getClassName(packageName);
             String content = "";
@@ -46,7 +46,7 @@ public class LemonGenerate {
                 for (String className : classNames) {
                     content += className.replaceFirst("debug.", "") + "\n";
                 }
-                FileWriter fileWriter = new FileWriter(path, true);
+                FileWriter fileWriter = new FileWriter(path, append);
                 BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
                 bufferWriter.write(content);
                 bufferWriter.close();

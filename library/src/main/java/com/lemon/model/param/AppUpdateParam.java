@@ -14,7 +14,8 @@ import com.lemon.model.BaseParam;
  * 修改备注:  [说明本次修改内容]
  * 版本:      [v1.0]
  */
-@Module(server = "update_server", name = "app")
+@Module(server = "update_server", name = "app",httpMethod="get")
 public class AppUpdateParam extends BaseParam {
+
 
 }

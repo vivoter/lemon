@@ -30,35 +30,6 @@ public class PackageUtil {
 
     public Context mContext;
 
-    public static void main(String[] args) throws Exception {
-        String packageName = "com.zfb";
-        List<String> classNames = getClassName(packageName);
-        String path = "app/src/main/assets/config/classes.cls";
-        String content = "";
-        if (classNames != null) {
-            for (String className : classNames) {
-                content += className.replaceFirst("debug.","") + "\n";
-            }
-            FileWriter fileWriter = new FileWriter(path,false);
-            BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
-            bufferWriter.write(content);
-            bufferWriter.close();
-        }
-
-        packageName = "com.lemon";
-        classNames = getClassName(packageName);
-        content = "";
-        if (classNames != null) {
-            for (String className : classNames) {
-                content += className.replaceFirst("debug.","") + "\n";
-            }
-            FileWriter fileWriter = new FileWriter(path,true);
-            BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
-            bufferWriter.write(content);
-            bufferWriter.close();
-        }
-    }
-
     public List<Class> getClasses(String class_config_path){
         try {
             List<Class> classes = new ArrayList<>();

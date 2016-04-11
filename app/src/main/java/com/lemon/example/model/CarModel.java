@@ -2,6 +2,7 @@ package com.lemon.example.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.lemon.annotation.Component;
 
 /**
  * 项目名称:  [lemon]

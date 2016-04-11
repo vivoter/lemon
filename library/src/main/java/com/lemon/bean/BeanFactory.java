@@ -47,7 +47,8 @@ public class BeanFactory {
     private volatile Map<String, Object> beanMap = new HashMap<String, Object>();
     private volatile Map<String, String> initMethodMap = new HashMap<>();
     private static final String xml_bean_config_path = "config/bean.xml";
-    private static final String class_path = "config/classes.cls";
+    private static final String lib_path = "config/lemon.cls";
+    private static final String app_path = "config/app.cls";
     private Context mContext;
 
     private BeanFactory() {
@@ -65,7 +66,7 @@ public class BeanFactory {
     public void parser() {
         try {
             parserXml();
-            parserAnnotaition();
+            parserAnnotation();
         } catch (Exception e) {
             LogUtils.e("BeanFactory parser :" + e.getMessage());
         }
@@ -86,9 +87,10 @@ public class BeanFactory {
         handleXmlProperty(beanNodes);
     }
 
-    private void parserAnnotaition() throws InstantiationException, IllegalAccessException {
+    private void parserAnnotation() throws InstantiationException, IllegalAccessException {
         PackageUtil util = getBean("packageUtil");
-        List<Class> classes = util.getClasses(class_path);
+        List<Class> classes = util.getClasses(lib_path);
+        classes.addAll(util.getClasses(app_path));
         handleAnnotationClass(classes);
         handleAnnotationProperty(classes);
     }

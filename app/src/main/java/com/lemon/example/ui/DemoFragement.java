@@ -27,6 +27,7 @@ public class DemoFragement extends LemonFragment {
     @FieldView(id = R.id.tvValue)
     public TextView tvValue;
 
+
     @Override
     protected void initView() {
         String message = "主要学习 @Layout @FieldView @OnClick 三个注解用法";

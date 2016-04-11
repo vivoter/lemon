@@ -15,8 +15,14 @@ import com.lemon.LemonGenerate;
  */
 public class GenerateRunner {
 
-    public static void main(String[] args){
-        LemonGenerate.generatorPackageClass("com.lemon");
+    static String path = "app/src/main/assets/config/app.cls";
+    static String[] packages = new String[]{"com.lemon"};//不同的packages 加载
+
+    //运行此方法，加载app中的类，暂时没解决自动扫描的问题，过度方案
+    public static void main(String[] args) {
+        for (String packageName : packages) {
+            LemonGenerate.generatorPackageClass(packageName, path, false);
+        }
     }
 
 }
