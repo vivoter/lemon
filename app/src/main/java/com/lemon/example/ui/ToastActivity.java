@@ -8,8 +8,12 @@ import com.lemon.LemonMessage;
 import com.lemon.annotation.FieldView;
 import com.lemon.annotation.Layout;
 import com.lemon.annotation.OnClick;
-import com.lemon.config.Config;
 import com.lemon.example.R;
+
+import java.io.IOException;
+import java.util.Enumeration;
+
+import dalvik.system.DexFile;
 
 /**
  * 项目名称:  [lemon]

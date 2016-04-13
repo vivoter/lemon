@@ -33,6 +33,11 @@
 
     <bean name="packageUtil" class="com.lemon.util.PackageUtil">
         <property name="mContext" value-ref="mContext"></property>
+        <property name="packages">
+            <list>
+                <entity type="basic" value="com.lemon"></entity>
+            </list>
+        </property>
     </bean>
 
     <bean name="lemonDatabaseHelper" class="com.lemon.LemonDatabaseHelper" init-method="createTables">

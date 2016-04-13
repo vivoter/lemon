@@ -89,8 +89,9 @@ public class BeanFactory {
 
     private void parserAnnotation() throws InstantiationException, IllegalAccessException {
         PackageUtil util = getBean("packageUtil");
-        List<Class> classes = util.getClasses(lib_path);
-        classes.addAll(util.getClasses(app_path));
+        List<Class> classes = util.autoLoadClass();
+        /*List<Class> classes = util.getClasses(lib_path);
+        classes.addAll(util.getClasses(app_path));*/
         handleAnnotationClass(classes);
         handleAnnotationProperty(classes);
     }
@@ -271,9 +272,6 @@ public class BeanFactory {
             }
             beanMap.put(key, cls.newInstance());
 
-            if(key.equals("lemonMessage")){
-                System.out.println();
-            }
             //get init-method with
             Method[] methods = cls.getMethods();
             if (ParamUtils.isNull(methods) || methods.length == 0) {
