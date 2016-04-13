@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
+    <!--核心配置 begin-->
     <bean name="initEngine" class="com.lemon.init.InitEngine">
         <property name="initializers">
             <list>
@@ -31,7 +32,7 @@
         <property name="configPath" value="config/config.json" />
     </bean>
 
-    <bean name="packageUtil" class="com.lemon.util.PackageUtil">
+    <bean name="packageLoader" class="com.lemon.util.PackageLoader">
         <property name="mContext" value-ref="mContext"></property>
         <property name="packages">
             <list>
@@ -52,10 +53,15 @@
         </property>
     </bean>
 
+    <!--核心配置 end-->
+
+
+    <!--扩展配置 begin-->
     <bean name="demo2Model" class="com.lemon.example.model.Demo2Model">
         <property name="mContext" value-ref="mContext"></property>
         <property name="lemonMessage" value-ref="lemonMessage"></property>
         <property name="value" value="value-xml" />
     </bean>
 
+    <!--扩展配置 end-->
 </beans>

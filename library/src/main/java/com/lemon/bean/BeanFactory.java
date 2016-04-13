@@ -8,7 +8,7 @@ import com.lemon.annotation.InitMethod;
 import com.lemon.annotation.RefBean;
 import com.lemon.util.Inflector;
 import com.lemon.util.LogUtils;
-import com.lemon.util.PackageUtil;
+import com.lemon.util.PackageLoader;
 import com.lemon.util.ParamUtils;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -88,10 +88,8 @@ public class BeanFactory {
     }
 
     private void parserAnnotation() throws InstantiationException, IllegalAccessException {
-        PackageUtil util = getBean("packageUtil");
-        List<Class> classes = util.autoLoadClass();
-        /*List<Class> classes = util.getClasses(lib_path);
-        classes.addAll(util.getClasses(app_path));*/
+        PackageLoader packageLoader = getBean("packageLoader");
+        List<Class> classes = packageLoader.autoLoadClass();
         handleAnnotationClass(classes);
         handleAnnotationProperty(classes);
     }
