@@ -19,7 +19,7 @@ lemon初衷是让android开发更简单，核心实现了一个轻量级别的�
 <img src="http://images.cnblogs.com/cnblogs_com/luxiaofeng54/815456/o_lemon_naotu.png" width="600" height="400"/><br>
 脑图地址: [戳这里](http://naotu.baidu.com/file/49cb90afc5275d88583dcff11996d8fe)
 
-## 四、模块
+## 四、模块使用
 ### 4.1 IOC模块
 此模块设计思路是加载xml文件和扫描类，根据xml配置和类注解，将类对象，属性，方法写入上下文缓存。关键类**BeanFactory**
 #### 4.1.1 IOC模块 Xml 配置
@@ -60,7 +60,9 @@ Xml配置模块是类似于spring中xml配置方式，配置文件位置asserts/
 
 ### 4.1.2 IOC模块 Annotation 配置
 #### 4.1.2.1 Component
-在类上添加Component注解，相当于配置文件中的<bean id="" class=""/>。Component 有个name属性，配置name属性表示在BeanFactory cacheMap里面存此对象的key是配置的name，若默认不配置则使用该类的首字母小写为关键字<br>
+在类上添加Component注解，相当于配置文件中的<bean id="" class=""/>。<br>
+Component 有个name属性，配置name属性表示在BeanFactory cacheMap里面存此对象的key是配置的name，<br>
+若默认不配置则使用该类的首字母小写为关键字<br>
 @Component
 public class Demo1Model {}
 
@@ -86,8 +88,49 @@ public void init() {
 
 ### 4.3 数据库模块
 
-### 4.4 初始化模块
 
+### 4.4 初始化模块
+分两类初始化:<br>
+1、APP启动初始化:继承AbstractInitializer,实现initialize方法。并且将类对象配置在assets/config/bean.xml里面<br>
+<code>
+public class DemoInitializer extends AbstractInitializer \{
+    @Override
+    public Object initialize(Object... objects) throws Exception \{
+        LogUtils.e(getClass().getSimpleName()+" : init");
+        return null;
+    \}
+}
+</code>
+\<bean name="initEngine" class="com.lemon.init.InitEngine"\>
+    \<property name="initializers"\>
+        \<list\>
+            <entity type="ref" value="preMethodInitializer"/\>
+            <entity type="ref" value="demoInitializer"/\>
+        \</list\>
+    \</property\>
+\</bean\>
+\<bean name="demoInitializer" class="com.lemon.example.init.DemoInitializer" /\>
+
+2、类初始化方法,有两种方式:2.1 通过配置文件的方式 init-method="方法名" 2.2 通过annotation的方式"方法前加上@InitMethod"<br>
+\<bean name="config" class="com.lemon.config.Config" init-method="parser"/\><br>
+<code>
+@Component
+public class Demo1Model {
+
+    @Autowired
+    public Context mContext;
+
+    @RefBean(name = "lemonMessage")
+    public LemonMessage lemonMessage;
+
+    private String name;
+
+    @InitMethod
+    public void init() {
+        name = "demo1  model";
+    }
+}
+</code>
 ### 4.5 缓存模块
 建议能用缓存存储的尽量不存数据库<br>
 Activity传递数据也可以通过共享缓存传递<br>
@@ -101,7 +144,7 @@ get:LemonContext.getBean(LemonCacheManager.class).getBean(CarModel.class);
 @FieldView 替代 findViewById(view.id())<br>
 @OnClick 替代 setOnClickListener<br>
 @Layout(id = R.layout.activity_anotations)<br>
-
+<code>
 public class AnnotationsActivity extends LemonActivity {
 
     @FieldView(id = R.id.btnShow)
@@ -121,6 +164,7 @@ public class AnnotationsActivity extends LemonActivity {
         lemonMessage.sendMessage("showClick");
     }
 }
+</code>
 
 
 ### 4.7 配置模块
@@ -133,8 +177,9 @@ public class AnnotationsActivity extends LemonActivity {
 任意位置,想toast消息,不需要考虑线程子线程<br>
 LemonContext.getBean(LemonMessage.class).sendMessage("message")
 
-## 使用方式
 
-## 相关文档
-
-## 作者
+## 作者相关
+name: Xiaofeng.lu
+qq: 454162034
+email: 454162034@qq.com
+blog: http://www.cnblogs.com/luxiaofeng54/
