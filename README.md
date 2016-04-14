@@ -45,7 +45,7 @@ Xml配置模块是类似于spring中xml配置方式，配置文件位置asserts/
             \<entity type="basic" value="config/config.json"/\>
             \<entity type="basic" value="config/config.json"/\>
         \</list\>
-    </property>
+    \</property\>
 \</bean\>
 ##### 4.1.1.6. map配置
 \<bean name="config" class="com.lemon.config.Config"\>
