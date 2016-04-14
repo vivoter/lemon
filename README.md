@@ -86,11 +86,12 @@ public void init() {
 ### 4.2 网络交互模块
 网络模块使用了**EventBus**,将请求后的对象发送给订阅的对象
 #### 4.2.1 约定配置
-1、请求参数
-在请求参数类前配置@Module注解，可参看AppUpdateParam
-server：服务器地址（config.json中配置）
-name：访问的模块名称
-httpMethod:访问的方式（get,post），不写默认为post
+1、请求参数<br>
+在请求参数类前配置@Module注解，可参看AppUpdateParam.java<br>
+server：服务器地址（config.json中配置）<br>
+name：访问的模块名称(服务器控制器)<br>
+httpMethod:访问的方式（get,post），不写默认为post<br>
+
 @Module(server = "update_server", name = "app",httpMethod="get")
 public class AppUpdateParam extends BaseParam {
     public String param1;
@@ -100,12 +101,38 @@ public class AppUpdateParam extends BaseParam {
 }
 
 2、返回数据
-
-
+AppUpdateResult继承BaseResult，定义一个结果数据对象，如UpdateInfo.java，如下：<br>
+public class AppUpdateResult extends BaseResult<UpdateInfo> {
+}
 
 #### 4.2.2 转换器
+BaseParamConverter:将参数的属性转换为接口数据<br>
+BaseResultConverter:将返回的json对象转换为返回结果
 #### 4.2.3 请求
+@Component
+public class ApiManager {
+    @Autowired
+    public Context mContext;
+    @Autowired
+    public NetEngine netEngine;
+
+    @ParamType(value = AppUpdateParam.class)
+    @ReturnType(value = AppUpdateResult.class)
+    public void update(BaseParam param) {
+        netEngine.invoke(param);
+    }
+}
+访问方式<br>
+AppUpdateParam param = new AppUpdateParam();
+LemonContext.getBean(ApiManager.class).update(param);
+
 #### 4.2.4 获取访问结果
+public void onEventMainThread(AppUpdateResult result){
+   tvResult.setText(result.getRetData().toString());
+}
+
+#### 4.2.5 实例
+参考NetActivity.java
 
 ### 4.3 数据库模块
 1、数据库模块使用的是ormlite，配置方式可以参考CarModel.java<br>

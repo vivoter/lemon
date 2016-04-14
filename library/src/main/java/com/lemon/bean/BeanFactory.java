@@ -308,6 +308,7 @@ public class BeanFactory {
                 }
 
                 //refbean > autowired  priority
+                field.setAccessible(true);
                 String valueKey = !ParamUtils.isNull(refBean) ? refBean.name() : field.getName();
                 Object fieldValue = beanMap.get(valueKey);
                 if (ParamUtils.isNull(fieldValue)) {

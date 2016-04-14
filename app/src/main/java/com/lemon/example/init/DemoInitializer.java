@@ -1,6 +1,7 @@
 package com.lemon.example.init;
 
 import com.lemon.init.AbstractInitializer;
+import com.lemon.util.LogUtils;
 
 /**
  * 项目名称:  [lemon]
@@ -16,7 +17,7 @@ import com.lemon.init.AbstractInitializer;
 public class DemoInitializer extends AbstractInitializer {
     @Override
     public Object initialize(Object... objects) throws Exception {
-
+        LogUtils.e(getClass().getSimpleName()+" : init");
         return null;
     }
 }
