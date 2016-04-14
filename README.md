@@ -84,15 +84,140 @@ public void init() {
 }
 
 ### 4.2 网络交互模块
+网络模块使用了**EventBus**,将请求后的对象发送给订阅的对象
+#### 4.2.1 约定配置
+1、请求参数
+在请求参数类前配置@Module注解，可参看AppUpdateParam
+server：服务器地址（config.json中配置）
+name：访问的模块名称
+httpMethod:访问的方式（get,post），不写默认为post
+@Module(server = "update_server", name = "app",httpMethod="get")
+public class AppUpdateParam extends BaseParam {
+    public String param1;
+    public String param2;
+    public String param3;
+    public String param4;
+}
 
+2、返回数据
+
+
+
+#### 4.2.2 转换器
+#### 4.2.3 请求
+#### 4.2.4 获取访问结果
 
 ### 4.3 数据库模块
+1、数据库模块使用的是ormlite，配置方式可以参考CarModel.java<br>
+@DatabaseTable(tableName = "tb_car")
+public class CarModel {
+    @DatabaseField(generatedId = true)
+    private int id;
 
+    @DatabaseField(columnName = "name")
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "CarModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+
+2、抽象出数据库的通用操作类：LemonDaoManager.java。使用如下：<br>
+@Layout(id = R.layout.activity_database)
+public class DatabaseActivity extends LemonActivity {
+
+    @FieldView(id = R.id.tvResult)
+    public TextView tvResult;
+
+    @OnClick(id = R.id.btnAdd)
+    public void addClick() {
+        CarModel model = new CarModel();
+        model.setName("car:" + RandomUtils.getRandom(1000));
+        daoManager.create(CarModel.class, model);
+        lemonMessage.sendMessage("添加完成");
+        queryClick();
+    }
+
+    @OnClick(id = R.id.btnUpdate)
+    public void updateClick() throws SQLException {
+        List<CarModel> list = daoManager.queryAllOrderBy(CarModel.class, "id", false);
+        if (ParamUtils.isEmpty(list)) {
+            return;
+        }
+
+        for (CarModel model : list) {
+            model.setName(model.getName()+":update:"+RandomUtils.getRandom(1000));
+            daoManager.update(CarModel.class,model);
+        }
+        lemonMessage.sendMessage("更新完成");
+        queryClick();
+    }
+
+    @OnClick(id = R.id.btnRemove)
+    public void removeClick() {
+        try {
+            daoManager.deleteAll(CarModel.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        lemonMessage.sendMessage("删除完成");
+        queryClick();
+    }
+
+    @OnClick(id = R.id.btnQuery)
+    public void queryClick() {
+        clearClick();
+        List<CarModel> list = daoManager.queryAllOrderBy(CarModel.class, "id", false);
+        StringBuilder sb = new StringBuilder();
+        if (ParamUtils.isEmpty(list)) {
+            return;
+        }
+
+        for (CarModel model : list) {
+            sb.append(model.toString()).append("\n");
+        }
+        tvResult.setText(sb.toString());
+    }
+
+    @OnClick(id = R.id.btnClear)
+    public void clearClick() {
+        tvResult.setText("");
+    }
+
+}
+
+3、在此之前需要将表配置到xml文件中新建出来，如下：<br>
+\<bean name="lemonDatabaseHelper" class="com.lemon.LemonDatabaseHelper" init-method="createTables"\>
+    \<property name="tables"\>
+        \<list\>
+            <entity type="basic" value="com.lemon.example.model.CarModel"/\>
+        \</list\>
+    \</property\>
+\</bean\>
 
 ### 4.4 初始化模块
 分两类初始化:<br>
 1、APP启动初始化:继承AbstractInitializer,实现initialize方法。并且将类对象配置在assets/config/bean.xml里面<br>
-<code>
 public class DemoInitializer extends AbstractInitializer \{
     @Override
     public Object initialize(Object... objects) throws Exception \{
@@ -100,7 +225,6 @@ public class DemoInitializer extends AbstractInitializer \{
         return null;
     \}
 }
-</code>
 \<bean name="initEngine" class="com.lemon.init.InitEngine"\>
     \<property name="initializers"\>
         \<list\>
@@ -113,7 +237,6 @@ public class DemoInitializer extends AbstractInitializer \{
 
 2、类初始化方法,有两种方式:2.1 通过配置文件的方式 init-method="方法名" 2.2 通过annotation的方式"方法前加上@InitMethod"<br>
 \<bean name="config" class="com.lemon.config.Config" init-method="parser"/\><br>
-<code>
 @Component
 public class Demo1Model {
 
@@ -130,7 +253,6 @@ public class Demo1Model {
         name = "demo1  model";
     }
 }
-</code>
 ### 4.5 缓存模块
 建议能用缓存存储的尽量不存数据库<br>
 Activity传递数据也可以通过共享缓存传递<br>
@@ -144,7 +266,6 @@ get:LemonContext.getBean(LemonCacheManager.class).getBean(CarModel.class);
 @FieldView 替代 findViewById(view.id())<br>
 @OnClick 替代 setOnClickListener<br>
 @Layout(id = R.layout.activity_anotations)<br>
-<code>
 public class AnnotationsActivity extends LemonActivity {
 
     @FieldView(id = R.id.btnShow)
@@ -164,8 +285,6 @@ public class AnnotationsActivity extends LemonActivity {
         lemonMessage.sendMessage("showClick");
     }
 }
-</code>
-
 
 ### 4.7 配置模块
 配置模块是一个通用模块，可以来配置一些常量<br>
@@ -177,6 +296,7 @@ public class AnnotationsActivity extends LemonActivity {
 任意位置,想toast消息,不需要考虑线程子线程<br>
 LemonContext.getBean(LemonMessage.class).sendMessage("message")
 
+### 4.9 界面父类 LemonActivity
 
 ## 作者相关
 name: Xiaofeng.lu
