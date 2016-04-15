@@ -326,7 +326,7 @@ LemonContext.getBean(LemonMessage.class).sendMessage("message")
 ### 4.9 界面父类 LemonActivity
 
 ## 作者相关
-name: Xiaofeng.lu
-qq: 454162034
-email: 454162034@qq.com
+name: Xiaofeng.lu<br>
+qq: 454162034<br>
+email: 454162034@qq.com<br>
 blog: http://www.cnblogs.com/luxiaofeng54/
