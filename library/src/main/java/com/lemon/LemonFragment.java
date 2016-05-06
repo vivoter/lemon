@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * 项目名称:  [Lemon]
  * 包:        [com.lemon]
@@ -60,6 +62,7 @@ public abstract class LemonFragment extends Fragment {
     }
 
     private void parentInit() {
+        EventBus.getDefault().register(this);
         cacheManager = BeanFactory.getInstance().getBean(LemonCacheManager.class);
         apiManager = BeanFactory.getInstance().getBean(ApiManager.class);
         daoManager = BeanFactory.getInstance().getBean(LemonDaoManager.class);
@@ -160,5 +163,12 @@ public abstract class LemonFragment extends Fragment {
 
     protected void toast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -252,5 +252,6 @@ public abstract class LemonActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+        EventBus.getDefault().unregister(this);
     }
 }
