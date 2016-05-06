@@ -100,7 +100,7 @@ public abstract class LemonActivity extends Activity {
         for (Field field : fields) {
             FieldView view = field.getAnnotation(FieldView.class);
             if(ParamUtils.isNull(view)){
-                return;
+                continue;
             }
 
             try {
