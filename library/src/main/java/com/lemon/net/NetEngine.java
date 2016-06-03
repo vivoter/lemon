@@ -102,7 +102,7 @@ public class NetEngine {
         website = serverPath+"/"+module+"/"+methodName;
         params = getParamConverter(param.getClass().getSimpleName()).convert(param);
 
-        LemonThread lemonThread = new LemonThread(website,params,strHttpMethod,returnType.value());
+        LemonThread lemonThread = new LemonThread(param,website,params,strHttpMethod,returnType.value());
         lemonThread.start();
     }
 
@@ -228,11 +228,13 @@ public class NetEngine {
     public class LemonThread extends Thread{
         Class  returnType;
         String website, params, httpMethod,strResult;
-        public LemonThread(String website,String params,String httpMethod,Class returnType){
+        BaseParam param;
+        public LemonThread(BaseParam param,String website,String params,String httpMethod,Class returnType){
             this.httpMethod = httpMethod;
             this.params = params;
             this.website = website;
             this.returnType = returnType;
+            this.param = param;
         }
 
         @Override
@@ -247,8 +249,9 @@ public class NetEngine {
                 eventBus.post(new ServerErrorEvent("Can not get result from server"));
                 return;
             }
-            Object baseResult = getResultConverter(returnType.getSimpleName()).convert(strResult,returnType);
-            handleAfter((BaseResult)baseResult);
+            BaseResult baseResult = (BaseResult)getResultConverter(returnType.getSimpleName()).convert(strResult,returnType);
+            baseResult.setParam(param);
+            handleAfter(baseResult);
         }
     }
 }

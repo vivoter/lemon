@@ -15,6 +15,7 @@ public class BaseResult<T> {
     protected String retMsg;
     protected String retCode;
     protected T retData;
+    protected BaseParam param;
 
     public String getRetMsg() {
         return retMsg;
@@ -40,12 +41,21 @@ public class BaseResult<T> {
         this.retData = retData;
     }
 
+    public BaseParam getParam() {
+        return param;
+    }
+
+    public void setParam(BaseParam param) {
+        this.param = param;
+    }
+
     @Override
     public String toString() {
         return "BaseResult{" +
                 "retMsg='" + retMsg + '\'' +
                 ", retCode='" + retCode + '\'' +
                 ", retData=" + retData +
+                ", param=" + param +
                 '}';
     }
 }
